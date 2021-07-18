@@ -2,6 +2,7 @@
   "name": "sample_app",
   "version": "0.1.0",
   "private": true,
+  "homepage":"http://grjus-portfolio.github.io/react-redux",
   "dependencies": {
     "@apollo/client": "^3.3.21",
     "@popperjs/core": "^2.9.2",
