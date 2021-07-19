@@ -55,12 +55,20 @@ const SpaceX:FC = ()=> {
 	const [ fetchLaunches, { loading, error, data } ] = useLazyQuery(LAUNCH_QUERY)
 	const [ pagePagination, setPagePagination ] = useState<number>(0)
 
-	
+	const  debounce = (func:()=>void, timeout = 300)=>{
+		let timer:ReturnType<typeof setTimeout>
+		return ()=>{
+			clearTimeout(timer)
+			timer = setTimeout(()=>func(), timeout)
+		}
+	}
+    
 	const handleNext = () => {
 		setPagePagination(prev=>prev+2)
 	}
 	const handlePrev = () => {
-		setPagePagination(prev=>prev-2)
+		if (pagePagination < 0) ()=>setPagePagination(0)
+		setPagePagination(prev=>prev>0?prev-2:0)
 	}
 
 	const handleSearch = (e:ChangeEvent<HTMLInputElement>) => {
@@ -82,8 +90,8 @@ const SpaceX:FC = ()=> {
 		}
 	}, [ search, pagePagination ])
 	
-	console.log(data?.length)
 
+	console.log(pagePagination)
 	return (
 		<div className="container">
 			<form>
@@ -92,8 +100,8 @@ const SpaceX:FC = ()=> {
 				</div>
 			</form>
 			<div className="d-flex">
-				<button onClick={handleNext} className={`btn btn-primary m-2 ${data===undefined?'disabled':''}`}>Next</button>
-				<button onClick={ handlePrev } className={`btn btn-secondary ${pagePagination<=0 || !data?'disabled':''} m-2`}>Previous</button>
+				<button onClick={ debounce(()=>handleNext(),500) } className={`btn btn-primary m-2 ${data?.launches.length===0?'disabled':''}`}>Next</button>
+				<button onClick={ debounce(()=>handlePrev(),500) } className={`btn btn-secondary ${pagePagination<=0?'disabled':''} m-2`}>Previous</button>
 			</div>
 			<div className="mt-4">
 				{ loading? <LoadingBox/> : null }
@@ -104,8 +112,8 @@ const SpaceX:FC = ()=> {
 						missionName={item.mission_name} 
 						missionDescription={item.details}
 						articleLink={item.links.article_link}
-						videoLink={''}
 						wikipedia={item.links.wikipedia}
+						id={item.id}
 					/>
 				}):null}
 			</div>

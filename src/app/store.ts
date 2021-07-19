@@ -1,11 +1,13 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit'
 import counterReducer from '../features/counter/counterSlice'
+import favouriteLaunches from '../features/spacex/favLaunchesSlice'
 import userDataReducer from '../features/user-data/userDataSlice'
 
 export const store = configureStore({
 	reducer: {
-		counter:  counterReducer,
-		userData: userDataReducer
+		counter:     counterReducer,
+		userData:    userDataReducer,
+		favLaunches: favouriteLaunches
 	},
 })
 

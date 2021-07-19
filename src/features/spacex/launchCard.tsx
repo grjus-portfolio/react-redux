@@ -1,19 +1,36 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { useAppDispatch } from '../../app/hooks'
+import { addFavourite, removeFavourite } from './favLaunchesSlice'
+import { FavLaunches } from './types'
 
-interface CardProps {
-	missionName:string,
-	missionDescription:string
-	articleLink:string,
-	videoLink:string,
-	wikipedia:string
-}
 
-export default function LaunchCard({ missionName, missionDescription, articleLink, videoLink, wikipedia }:CardProps):JSX.Element {
+export default function LaunchCard({ missionName, missionDescription, articleLink, wikipedia,id }:FavLaunches):JSX.Element {
 
-	const baseUrl = 'https://www.youtube.com/embed/'
-	const videoId = videoLink?videoLink.split('/').slice(-1).pop():''
-	console.log(videoLink)
+	
+	const [ checked, setChecked ] = useState<boolean>(false)
+	const dispatch = useAppDispatch()
+
+
+	const handleChecked = ()=>{
+		setChecked(prev=>!prev)
+	}
+
+
+	useEffect(()=>{
+		if (checked){
+			
+			dispatch(addFavourite({
+				missionName,
+				missionDescription,
+				wikipedia,
+				articleLink,
+				id
+			}))
+		} else {
+			dispatch(removeFavourite(id))
+		}
+
+	},[ checked ])
 
 
 	return (
@@ -25,13 +42,11 @@ export default function LaunchCard({ missionName, missionDescription, articleLin
 				<h5 className="card-title">More information</h5>
 				<p className="card-text">For article click <a href={articleLink} target="_blank" rel="noreferrer">here</a></p>
 				<p className="card-text">Wikipedia <a href={wikipedia} target="_blank" rel="noreferrer">article</a></p>
-				<div className="card-text">
-					<iframe src=''
-						frameBorder='0'
-						allow='autoplay; encrypted-media'
-						allowFullScreen
-						title='video'
-					/>
+				<div onClick = {handleChecked} style={{ cursor: 'pointer', userSelect: 'none' }} className="d-flex">
+					<i className={`bi bi-heart${checked?'-fill':''}`}/>
+					<span className="px-2" >
+                    Add to favourites
+					</span>
 				</div>
 			</div>
 		</div>
