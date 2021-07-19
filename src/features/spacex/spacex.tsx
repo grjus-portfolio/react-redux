@@ -1,5 +1,5 @@
 import { gql, useLazyQuery } from '@apollo/client'
-import React,{ FC, useEffect, useState } from 'react'
+import React,{ ChangeEvent, FC, useEffect, useState } from 'react'
 import ErrorBox from './errorBox'
 import LaunchCard from './launchCard'
 import LoadingBox from './loadingBox'
@@ -28,8 +28,8 @@ interface LaunchLinks {
 
 
 const LAUNCH_QUERY = gql`
-  query Launches($missionName:String!) {
-    launches(find:{mission_name:$missionName}) {
+  query Launches($missionName:String!, $offset:Int!) {
+    launches(find:{mission_name:$missionName}, limit:4, offset:$offset) {
     id
     mission_name
     mission_id
@@ -52,25 +52,48 @@ const SpaceX:FC = ()=> {
 
 	const [ search, setSearch ] = useState<string>('')
 
-	const [ fetchLaunches,{ loading, error, data } ] = useLazyQuery(LAUNCH_QUERY)
+	const [ fetchLaunches, { loading, error, data } ] = useLazyQuery(LAUNCH_QUERY)
+	const [ pagePagination, setPagePagination ] = useState<number>(0)
+
+	
+	const handleNext = () => {
+		setPagePagination(prev=>prev+2)
+	}
+	const handlePrev = () => {
+		setPagePagination(prev=>prev-2)
+	}
+
+	const handleSearch = (e:ChangeEvent<HTMLInputElement>) => {
+		setSearch(e.target.value)
+		setPagePagination(0)
+	}
 
 	useEffect(()=>{
 		const timer = setTimeout(()=>{
 			fetchLaunches({
 				variables: {
-					missionName: search
+					missionName: search,
+					offset:      pagePagination
 				}
 			})
 		},800)
 		return ()=>{
 			clearTimeout(timer)
 		}
-	},[ search ])
+	}, [ search, pagePagination ])
+	
+	console.log(data?.length)
 
 	return (
-		<form>
-			<div className="form-group">
-				<input type="text" value={search} onChange={(e)=>setSearch(e.target.value)} className="form-control"  aria-describedby="searchField" placeholder="Search mission"/>
+		<div className="container">
+			<form>
+				<div className="form-group">
+					<input type="text" value={search} onChange={handleSearch} className="form-control"  aria-describedby="searchField" placeholder="Search mission"/>
+				</div>
+			</form>
+			<div className="d-flex">
+				<button onClick={handleNext} className={`btn btn-primary m-2 ${data===undefined?'disabled':''}`}>Next</button>
+				<button onClick={ handlePrev } className={`btn btn-secondary ${pagePagination<=0 || !data?'disabled':''} m-2`}>Previous</button>
 			</div>
 			<div className="mt-4">
 				{ loading? <LoadingBox/> : null }
@@ -85,10 +108,8 @@ const SpaceX:FC = ()=> {
 						wikipedia={item.links.wikipedia}
 					/>
 				}):null}
-				
-
 			</div>
-		</form>
+		</div>
 	)
 }
 

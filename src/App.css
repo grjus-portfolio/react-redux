@@ -1,6 +1,9 @@
 .App {
   margin:0 auto;
 }
+.ui.dropdown .visible.menu {
+  display: inline-block !important;
+}
 
 .App-logo {
   height: 40vmin;
