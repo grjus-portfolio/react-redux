@@ -5,8 +5,6 @@ import App from './App'
 import { store } from './app/store'
 import { Provider } from 'react-redux'
 import { BrowserRouter as Router } from 'react-router-dom'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap/dist/js/bootstrap.bundle'
 import { ApolloClient, 
 	ApolloProvider, 
 	InMemoryCache } from '@apollo/client'
