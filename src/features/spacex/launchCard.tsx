@@ -1,36 +1,33 @@
-import React, { useEffect, useState } from 'react'
+import React, {  useState } from 'react'
 import { useAppDispatch } from '../../app/hooks'
 import { addFavourite, removeFavourite } from './favLaunchesSlice'
 import { FavLaunches } from './types'
 
 
-export default function LaunchCard({ missionName, missionDescription, articleLink, wikipedia,id }:FavLaunches):JSX.Element {
+export default function LaunchCard({ missionName, missionDescription, articleLink, wikipedia,id, showFav }:FavLaunches):JSX.Element {
 
 	
 	const [ checked, setChecked ] = useState<boolean>(false)
 	const dispatch = useAppDispatch()
 
 
-	const handleChecked = ()=>{
-		setChecked(prev=>!prev)
+	const handleChecked = () => {
+		
+		setChecked(prev => {
+			if (!prev) {
+				dispatch(addFavourite({
+					missionName,
+					missionDescription,
+					wikipedia,
+					articleLink,
+					id
+				}))
+			} else {
+				dispatch(removeFavourite(id))
+			}
+			return !prev
+		})
 	}
-
-
-	useEffect(()=>{
-		if (checked){
-			
-			dispatch(addFavourite({
-				missionName,
-				missionDescription,
-				wikipedia,
-				articleLink,
-				id
-			}))
-		} else {
-			dispatch(removeFavourite(id))
-		}
-
-	},[ checked ])
 
 
 	return (
@@ -42,12 +39,12 @@ export default function LaunchCard({ missionName, missionDescription, articleLin
 				<h5 className="card-title">More information</h5>
 				<p className="card-text">For article click <a href={articleLink} target="_blank" rel="noreferrer">here</a></p>
 				<p className="card-text">Wikipedia <a href={wikipedia} target="_blank" rel="noreferrer">article</a></p>
-				<div onClick = {handleChecked} style={{ cursor: 'pointer', userSelect: 'none' }} className="d-flex">
-					<i className={`bi bi-heart${checked?'-fill':''}`}/>
+				{showFav ? <div onClick={handleChecked} style={{ cursor: 'pointer', userSelect: 'none' }} className="d-flex">
+					<i className={`bi bi-heart${checked ? '-fill' : ''}`} />
 					<span className="px-2" >
-                    Add to favourites
+						Add to favourites
 					</span>
-				</div>
+				</div> : null}
 			</div>
 		</div>
 	)

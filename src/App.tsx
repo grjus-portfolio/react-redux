@@ -6,6 +6,7 @@ import { Route, Switch } from 'react-router-dom'
 import Navbar from './features/navbar/navbar'
 import User from './features/user-data/User'
 import SpaceX from './features/spacex/spacex'
+import FavMissions from './features/spacex/favMissions'
 
 function App():JSX.Element {
 	console.log('I am rendering')
@@ -20,7 +21,8 @@ function App():JSX.Element {
 				<Switch>
 					<Route path="/counter" component={Counter}/>
 					<Route path="/introduction" component={User}/>
-					<Route path="/spacex" component={SpaceX}/>
+					<Route path="/spacex" component={SpaceX} />
+					<Route path="/my-missions" component={FavMissions}/>
 				</Switch>
 			
 			</header>

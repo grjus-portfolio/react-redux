@@ -49,8 +49,9 @@
             "always"
         ],
         "key-spacing": ["error", { "align": "value" }],
-        "keyword-spacing": ["error", { "after": true }],
-        "no-multiple-empty-lines": "error"
+        "keyword-spacing": ["error", { "after": true, "before":true }],
+        "no-multiple-empty-lines": "error",
+        "no-unused-vars": ["error", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }]
         // "max-len": ["error", { "code": 80 }],
         // "sort-imports": ["error", {
         //     "ignoreCase": false,

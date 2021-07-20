@@ -114,6 +114,7 @@ const SpaceX:FC = ()=> {
 						articleLink={item.links.article_link}
 						wikipedia={item.links.wikipedia}
 						id={item.id}
+						showFav
 					/>
 				}):null}
 			</div>

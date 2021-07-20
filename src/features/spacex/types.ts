@@ -3,5 +3,6 @@ export interface FavLaunches {
 	missionDescription:string
 	articleLink:string,
 	wikipedia:string,
-	id?:string
+	id?: string
+	showFav?:boolean
 }
